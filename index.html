@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>J Rejon — ML Engineer & Data Analyst</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #0D1F3C;
+      --navy-mid:   #162d55;
+      --navy-light: #1e3f73;
+      --gold:       #C9A84C;
+      --gold-light: #e0bf7a;
+      --cream:      #F5F0E8;
+      --cream-dim:  #ede6d8;
+      --white:      #FFFFFF;
+      --text-dim:   #94a3b8;
+      --card-bg:    #132240;
+      --border:     rgba(201,168,76,0.22);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--cream);
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--navy); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 60px;
+      background: rgba(13,31,60,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: 0.03em;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 120px 60px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 75% 50%, rgba(30,63,115,0.5) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.08) 0%, transparent 60%);
+    }
+    .hero-grid-lines {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-text { position: relative; z-index: 2; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 36px; height: 1px;
+      background: var(--gold);
+    }
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 5.5vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+    .hero-name .highlight {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--gold);
+    }
+    .hero-tagline {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--text-dim);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 44px;
+    }
+    .hero-tagline strong { color: var(--cream); font-weight: 500; }
+    .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      padding: 14px 32px;
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .btn-outline {
+      padding: 14px 32px;
+      background: transparent;
+      color: var(--cream);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── PHOTO SIDE ── */
+    .hero-photo-wrap {
+      position: relative; z-index: 2;
+      display: flex; justify-content: center; align-items: center;
+    }
+    .photo-frame {
+      position: relative;
+      width: 340px; height: 400px;
+    }
+    .photo-frame::before {
+      content: '';
+      position: absolute;
+      top: -14px; left: -14px;
+      right: 14px; bottom: 14px;
+      border: 2px solid var(--gold);
+      z-index: 0;
+    }
+    .photo-frame::after {
+      content: '';
+      position: absolute;
+      top: 14px; left: 14px;
+      right: -14px; bottom: -14px;
+      background: var(--navy-mid);
+      z-index: 0;
+    }
+    .photo-inner {
+      position: relative; z-index: 1;
+      width: 100%; height: 100%;
+      background: var(--card-bg);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .photo-inner img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top center;
+    }
+    .photo-placeholder {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      color: var(--text-dim); text-align: center; padding: 20px;
+    }
+    .photo-placeholder .icon {
+      font-size: 4rem; line-height: 1;
+      color: var(--gold); opacity: 0.5;
+    }
+    .photo-placeholder p { font-size: 0.82rem; line-height: 1.6; }
+    .photo-placeholder code {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      background: rgba(201,168,76,0.1);
+      color: var(--gold);
+      padding: 2px 8px;
+    }
+    .photo-badge {
+      position: absolute;
+      bottom: -20px; right: -20px;
+      z-index: 10;
+      background: var(--gold);
+      color: var(--navy);
+      padding: 14px 18px;
+      text-align: center;
+    }
+    .photo-badge .years { font-size: 1.8rem; font-weight: 900; font-family: 'Playfair Display', serif; display: block; }
+    .photo-badge .label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 60px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--gold);
+      display: block;
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .stat-divider {
+      width: 1px; background: var(--border);
+      margin: auto;
+    }
+
+    /* ── SECTIONS COMMON ── */
+    section { padding: 100px 60px; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .section-label::before {
+      content: '';
+      display: block; width: 28px; height: 1px;
+      background: var(--gold);
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 60px;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--navy); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .about-body p {
+      font-size: 1.0rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--cream-dim);
+      margin-bottom: 20px;
+    }
+    .about-body p strong { color: var(--white); font-weight: 600; }
+    .contact-list { margin-top: 36px; display: flex; flex-direction: column; gap: 14px; }
+    .contact-item {
+      display: flex; align-items: center; gap: 14px;
+      font-size: 0.9rem;
+    }
+    .contact-icon {
+      width: 36px; height: 36px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+    .contact-item a { color: var(--gold); text-decoration: none; }
+    .contact-item a:hover { text-decoration: underline; }
+    .contact-item span { color: var(--cream-dim); }
+
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 20px;
+      padding-bottom: 36px;
+      position: relative;
+    }
+    .timeline-item:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      top: 20px; left: 7px;
+      width: 2px;
+      bottom: 0;
+      background: var(--border);
+    }
+    .timeline-dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 3px solid var(--navy);
+      margin-top: 4px;
+      flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+    .timeline-content {}
+    .timeline-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .timeline-role {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 3px;
+    }
+    .timeline-company {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+    .timeline-desc {
+      font-size: 0.88rem;
+      color: var(--cream-dim);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── SKILLS ── */
+    #skills { background: var(--navy-mid); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .skill-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 32px 28px;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .skill-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+    .skill-card-icon { font-size: 2rem; margin-bottom: 16px; }
+    .skill-card-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-tag {
+      padding: 5px 12px;
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.18);
+      font-size: 0.78rem;
+      color: var(--cream-dim);
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ── PROJECTS ── */
+    #projects { background: var(--navy); }
+    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 40px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s;
+    }
+    .project-card:hover { border-color: var(--gold); }
+    .project-card.featured { grid-column: 1 / -1; }
+    .project-number {
+      position: absolute; top: 24px; right: 28px;
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      font-weight: 900;
+      color: rgba(201,168,76,0.07);
+      line-height: 1;
+    }
+    .project-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid var(--border);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+      font-family: 'DM Mono', monospace;
+    }
+    .project-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--cream-dim);
+      line-height: 1.75;
+      font-weight: 300;
+      margin-bottom: 24px;
+    }
+    .project-tech { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tech-pill {
+      padding: 4px 12px;
+      background: rgba(30,63,115,0.6);
+      border: 1px solid rgba(255,255,255,0.07);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ── EDUCATION ── */
+    #education { background: var(--navy-mid); }
+    .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .edu-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 36px 32px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .edu-icon {
+      width: 52px; height: 52px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+    }
+    .edu-degree {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .edu-school {
+      font-size: 0.88rem;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .edu-year {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--navy);
+      text-align: center;
+    }
+    .contact-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 64px 56px;
+    }
+    .contact-card p {
+      font-size: 1.05rem;
+      color: var(--cream-dim);
+      line-height: 1.7;
+      font-weight: 300;
+      margin-bottom: 40px;
+    }
+    .contact-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .contact-link-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 24px;
+      border: 1px solid var(--border);
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .contact-link-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #080f1e;
+      border-top: 1px solid var(--border);
+      padding: 28px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: var(--white);
+      font-size: 1.1rem;
+    }
+    .footer-logo span { color: var(--gold); }
+    footer p { font-size: 0.8rem; color: var(--text-dim); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-text > * { animation: fadeUp 0.7s ease both; }
+    .hero-eyebrow { animation-delay: 0.1s; }
+    .hero-name    { animation-delay: 0.25s; }
+    .hero-tagline { animation-delay: 0.4s; }
+    .hero-cta     { animation-delay: 0.55s; }
+    .hero-photo-wrap { animation: fadeUp 0.8s 0.3s ease both; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 18px 24px; }
+      .nav-links { gap: 20px; }
+      #hero { grid-template-columns: 1fr; padding: 120px 24px 60px; text-align: center; }
+      .hero-eyebrow { justify-content: center; }
+      .hero-tagline { max-width: 100%; }
+      .hero-cta { justify-content: center; }
+      .hero-photo-wrap { order: -1; margin-bottom: 40px; }
+      .photo-frame { width: 240px; height: 280px; }
+      .stats-bar { grid-template-columns: 1fr 1fr; padding: 40px 24px; }
+      section { padding: 70px 24px; }
+      .about-grid, .projects-grid, .edu-grid, .skills-grid { grid-template-columns: 1fr; }
+      .project-card.featured { grid-column: 1; }
+      .contact-card { padding: 40px 24px; }
+      footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">J<span>.</span>Rejon</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid-lines"></div>
+    <div class="hero-text">
+      <div class="hero-eyebrow">ML Engineer · Data Analyst · AI Developer</div>
+      <h1 class="hero-name">J <span class="highlight">Rejon</span></h1>
+      <p class="hero-tagline">
+        Building <strong>intelligent systems</strong> at the intersection of data science and real-world engineering.
+        Currently shipping ML solutions at Athenova &amp; Sciera.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">View My Work</a>
+        <a href="#contact" class="btn-outline">Get In Touch</a>
+      </div>
+    </div>
+    <div class="hero-photo-wrap">
+      <div class="photo-frame">
+        <div class="photo-inner"><img src="photo.png" alt="J Rejon" style="width:100%;height:100%;object-fit:cover;object-position:top center;" /></div>
+        <div class="photo-badge">
+          <span class="years">2.5</span>
+          <span class="label">Yrs Experience</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-num">2+</span>
+      <span class="stat-label">Companies</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">2.5</span>
+      <span class="stat-label">Years Industry Exp.</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">95%+</span>
+      <span class="stat-label">Model Accuracy</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">2026</span>
+      <span class="stat-label">B.E. Graduate</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-label">Who I Am</div>
+    <h2 class="section-title">About Me</h2>
+    <div class="about-grid">
+      <div class="about-body">
+        <p>
+          I'm a <strong>final-year Computer Science Engineering student</strong> and active ML Engineer with hands-on industry experience across machine learning, data analytics, and AI application development.
+        </p>
+        <p>
+          Currently working as a <strong>Machine Learning Engineer at Athenova Research Consortium</strong> and concurrently as a <strong>Data Analyst at Sciera, Inc.</strong>, I've spent the last 2.5 years building production-grade data pipelines, predictive models, and AI-driven systems.
+        </p>
+        <p>
+          I'm passionate about turning raw data into <strong>actionable intelligence</strong> — and deploying models that solve real-world problems at scale.
+        </p>
+        <div class="contact-list">
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <span>+91 7449262478</span>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">✉️</div>
+            <a href="mailto:jagensahitha@gmail.com">jagensahitha@gmail.com</a>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🔗</div>
+            <a href="https://www.linkedin.com/in/j-rejonb64a37321" target="_blank">linkedin.com/in/j-rejonb64a37321</a>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <span>Chennai, Tamil Nadu, India</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label" style="margin-bottom:28px;">Experience Timeline</div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-date">Oct 2025 – Present</div>
+              <div class="timeline-role">Machine Learning Engineer</div>
+              <div class="timeline-company">Athenova Research Consortium · Chennai</div>
+              <div class="timeline-desc">Designing and deploying end-to-end ML pipelines for research-grade AI applications. Applying MLOps practices for reproducibility and production reliability.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-date">Nov 2023 – Present</div>
+              <div class="timeline-role">Data Analyst</div>
+              <div class="timeline-company">Sciera, Inc. · Chennai</div>
+              <div class="timeline-desc">Large-scale data extraction, transformation and analysis using Python. Built dashboards, automated reports, and predictive models to support data-driven decisions.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: var(--navy-light); border-color: var(--gold);"></div>
+            <div class="timeline-content">
+              <div class="timeline-date">Sep 2022 – Jun 2026</div>
+              <div class="timeline-role">B.E. Computer Science Engineering</div>
+              <div class="timeline-company">Annai Veilankannis College of Engineering</div>
+              <div class="timeline-desc">Core focus on data structures, algorithms, ML, AI and database systems. Building capstone AI projects alongside industry work.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-label">What I Know</div>
+    <h2 class="section-title">Technical Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-card-icon">🧠</div>
+        <div class="skill-card-title">Machine Learning & AI</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Machine Learning</span>
+          <span class="skill-tag">Deep Learning</span>
+          <span class="skill-tag">Computer Vision</span>
+          <span class="skill-tag">NLP</span>
+          <span class="skill-tag">Scikit-learn</span>
+          <span class="skill-tag">TensorFlow</span>
+          <span class="skill-tag">PyTorch</span>
+          <span class="skill-tag">OpenCV</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-icon">📊</div>
+        <div class="skill-card-title">Data & Analytics</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Pandas</span>
+          <span class="skill-tag">NumPy</span>
+          <span class="skill-tag">SQL</span>
+          <span class="skill-tag">Matplotlib</span>
+          <span class="skill-tag">Data Visualization</span>
+          <span class="skill-tag">EDA</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-icon">⚙️</div>
+        <div class="skill-card-title">MLOps & Engineering</div>
+        <div class="skill-tags">
+          <span class="skill-tag">MLOps</span>
+          <span class="skill-tag">Model Deployment</span>
+          <span class="skill-tag">REST APIs</span>
+          <span class="skill-tag">CI/CD</span>
+          <span class="skill-tag">Git</span>
+          <span class="skill-tag">Linux</span>
+          <span class="skill-tag">DBMS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-label">What I've Built</div>
+    <h2 class="section-title">Projects</h2>
+    <div class="projects-grid">
+      <div class="project-card featured">
+        <div class="project-number">01</div>
+        <div class="project-badge">Capstone · AI Application</div>
+        <h3 class="project-title">AI-Powered Smart Attendance System</h3>
+        <p class="project-desc">
+          A real-time dual-factor attendance platform combining facial recognition and GPS geofencing to eliminate proxy attendance entirely.
+          Achieved 95%+ face recognition accuracy under varied lighting conditions using DeepFace. 
+          Integrated GPS-based location verification as a second authentication layer, backed by a Python REST API and a web admin dashboard for reporting.
+        </p>
+        <div class="project-tech">
+          <span class="tech-pill">Python</span>
+          <span class="tech-pill">OpenCV</span>
+          <span class="tech-pill">DeepFace</span>
+          <span class="tech-pill">Geofencing</span>
+          <span class="tech-pill">REST API</span>
+          <span class="tech-pill">Computer Vision</span>
+          <span class="tech-pill">Web Dashboard</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-number">02</div>
+        <div class="project-badge">Data Engineering</div>
+        <h3 class="project-title">Predictive Analytics Pipeline</h3>
+        <p class="project-desc">
+          Built automated ETL + ML pipelines at Sciera to surface business insights from large datasets, reducing manual reporting time significantly through intelligent automation.
+        </p>
+        <div class="project-tech">
+          <span class="tech-pill">Python</span>
+          <span class="tech-pill">Pandas</span>
+          <span class="tech-pill">Scikit-learn</span>
+          <span class="tech-pill">SQL</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-number">03</div>
+        <div class="project-badge">MLOps · Research</div>
+        <h3 class="project-title">ML Research Pipelines @ Athenova</h3>
+        <p class="project-desc">
+          Designing and maintaining end-to-end reproducible ML workflows for research-grade AI applications using versioning, monitoring, and CI/CD best practices.
+        </p>
+        <div class="project-tech">
+          <span class="tech-pill">MLOps</span>
+          <span class="tech-pill">Deep Learning</span>
+          <span class="tech-pill">Model Monitoring</span>
+          <span class="tech-pill">CI/CD</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="section-label">My Background</div>
+    <h2 class="section-title">Education</h2>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-icon">🎓</div>
+        <div>
+          <div class="edu-degree">B.E. Computer Science Engineering</div>
+          <div class="edu-school">Annai Veilankannis College of Engineering, Chennai</div>
+          <div class="edu-year">Sep 2022 – Jun 2026</div>
+        </div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-icon">📚</div>
+        <div>
+          <div class="edu-degree">Higher Secondary — Computer Science</div>
+          <div class="edu-school">St. Joseph's Matriculation Higher Secondary School</div>
+          <div class="edu-year">Completed 2022</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-label">Get In Touch</div>
+    <h2 class="section-title">Let's Connect</h2>
+    <div class="contact-card">
+      <p>
+        I'm open to full-time roles, internships, and collaborations in <strong style="color:var(--white)">ML Engineering, Data Science, and AI Development.</strong>
+        If you have an interesting problem to solve, I'd love to hear from you.
+      </p>
+      <a href="mailto:jagensahitha@gmail.com" class="btn-primary" style="display:inline-block;margin-bottom:32px;">
+        📧 &nbsp; Send Me an Email
+      </a>
+      <div class="contact-links">
+        <a href="https://www.linkedin.com/in/j-rejonb64a37321" target="_blank" class="contact-link-btn">🔗 LinkedIn</a>
+        <a href="tel:+917449262478" class="contact-link-btn">📞 Call Me</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">J<span>.</span>Rejon</div>
+    <p>© 2026 J Rejon · Chennai, India</p>
+    <p>ML Engineer · Data Analyst · AI Developer</p>
+  </footer>
+
+</body>
+</html>
